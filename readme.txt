@@ -12,15 +12,15 @@
 -----------
 Используемые пакеты Gulp:
 
-  - gulp-sass - подключаем Sass пакет,
+  - gulp-sass - подключаем sass пакет,
   - gulp-util - вывод уведомления в консоль, так как в gulp нет встроенного лога,
-  - browser-sync - подключаем Browser Sync,
+  - browser-sync - подключаем browser sync,
   - gulp-concat - подключаем gulp-concat (для конкатенации файлов),
-  - gulp-uglify - подключаем gulp-uglifyjs (для сжатия JS),
-  - gulp-clean-css - минификация CSS,
+  - gulp-uglify - подключаем gulp-uglifyjs (для сжатия js),
+  - gulp-clean-css - минификация css,
   - gulp-rename - подключаем библиотеку для переименования файлов
-  - gulp-notify - водит ошибки при сборке Gulp в виде системных сообщений,
-  - gulp-rsync - диплой на хостинг,
+  - gulp-notify - водит ошибки при сборке gulp в виде системных сообщений,
+  - gulp-rsync - деплой на хостинг,
   - gulp-imagemin - подключаем библиотеку для работы с изображениями,
   - gulp-cache - подключаем библиотеку кеширования,
   - del - подключаем библиотеку для удаления файлов и папок,
