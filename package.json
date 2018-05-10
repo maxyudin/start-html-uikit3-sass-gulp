@@ -1,0 +1,27 @@
+{
+  "name": "start-html-uikit3-sass-gulp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sergey Pinchukov",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.24.4",
+    "del": "^3.0.0",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-cache": "^1.0.2",
+    "gulp-clean-css": "^3.9.4",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rsync": "0.0.8",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "imagemin-pngquant": "^5.1.0"
+  }
+}

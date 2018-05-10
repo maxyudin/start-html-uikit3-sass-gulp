@@ -1,0 +1,16 @@
+User-agent: *
+Disallow: /index.html
+
+Allow: /img/
+Disallow: /css/
+Disallow: /js/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
+Allow: /img/
+Disallow: /css/
+Disallow: /js/
+
+Host: mydomain.com
