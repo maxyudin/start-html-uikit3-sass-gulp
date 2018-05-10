@@ -27,37 +27,35 @@
   - imagemin-pngquant - подключаем библиотеку дл€ работы с png,
   - gulp-autoprefixer - подключаем библиотеку дл€ автоматического добавлени€ префиксов,
 
+
 -----------
 ”становка требуемых пакетов Gulp:
 
-$ npm i gulp-sass --save-dev
-$ npm i gulp-util --save-dev
-$ npm i browser-sync --save-dev
-$ npm i gulp-concat --save-dev
-$ npm i gulp-uglify --save-dev
-$ npm i gulp-clean-css --save-dev
-$ npm i gulp-rename --save-dev
-$ npm i gulp-notify --save-dev
-$ npm i gulp-rsync --save-dev
-$ npm i gulp-imagemin --save-dev
-$ npm i gulp-cache --save-dev
-$ npm i del --save-dev
-$ npm i imagemin-pngquant --save-dev
-$ npm i gulp-autoprefixer --save-dev
+  $ npm i gulp-sass --save-dev
+  $ npm i gulp-util --save-dev
+  $ npm i browser-sync --save-dev
+  $ npm i gulp-concat --save-dev
+  $ npm i gulp-uglify --save-dev
+  $ npm i gulp-clean-css --save-dev
+  $ npm i gulp-rename --save-dev
+  $ npm i gulp-notify --save-dev
+  $ npm i gulp-rsync --save-dev
+  $ npm i gulp-imagemin --save-dev
+  $ npm i gulp-cache --save-dev
+  $ npm i del --save-dev
+  $ npm i imagemin-pngquant --save-dev
+  $ npm i gulp-autoprefixer --save-dev
 
 
 -----------
 ѕолезна€ информаци€:
 
-$ npm i gulp-update  - обновление gulp
+  $ npm i gulp-update  - обновление gulp
+  $ npm outdated - проверить наличие обновлений дл€ компонентов gulp
+  $ npm update --save   -  обновить пакеты gulp до последней версии
+  $ npm update browser-sync --save-dev  -  ќбновление конкретного пакета, в данном случае browser-sync.
 
-$ npm outdated - проверить наличие обновлений дл€ компонентов gulp
-
-$ npm update --save   -  обновить пакеты gulp до последней версии
-
-$ npm update browser-sync --save-dev  -  ќбновление конкретного пакета, в данном случае browser-sync.
 
 ------------
-
 ≈сли у вас имеютс€ вопросы и предложени€, буду рад ответить: pinchukov.net
 
