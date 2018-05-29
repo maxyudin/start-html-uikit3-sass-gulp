@@ -7,6 +7,7 @@ var gulp          = require('gulp'), // Подключаем Gulp
 		concat        = require('gulp-concat'), // Подключаем gulp-concat (для конкатенации файлов)
 		uglify        = require('gulp-uglify'), // Подключаем gulp-uglifyjs (для сжатия JS)
 		cleancss      = require('gulp-clean-css'), // Минификация CSS
+		htmlmin       = require('gulp-htmlmin'); //Минификация HTML
 		rename        = require('gulp-rename'), // Подключаем библиотеку для переименования файлов
 		notify        = require("gulp-notify"), // Водит ошибки при сборке Gulp в виде системных сообщений
 		rsync         = require('gulp-rsync'), // Диплой на хостинг
@@ -29,6 +30,7 @@ gulp.task('browser-sync', function() {
 		// tunnel: true,
 		// tunnel: "projectmane", //Demonstration page: http://projectmane.localtunnel.me
 	})
+	// Ссылка живет минут 20
 });
 
 
@@ -70,6 +72,7 @@ gulp.task('rsync', function() {
 		silent: false,
 		compress: true
 	}))
+	//Документация: https://pinchukov.net/blog/gulp-rsync.html
 });
 
 gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
@@ -111,8 +114,9 @@ gulp.task('build', ['clean', 'img', 'sass', 'js'], function() {
     var buildJs = gulp.src('app/js/**/*') // Переносим скрипты в продакшен
     .pipe(gulp.dest('dist/js'))
 
-    var buildHtml = gulp.src('app/*.html') // Переносим HTML в продакшен
-    .pipe(gulp.dest('dist'))
+    var buildHtml = gulp.src('app/*.html') // Берём все файлы HTML
+    .pipe(htmlmin({collapseWhitespace: true})) //Сжимаем их как следует
+    .pipe(gulp.dest('dist')) // И переносим в продакшен
 
     //var buildPhp = gulp.src('app/*.php') // Переносим .php в продакшен
     //.pipe(gulp.dest('dist'))
