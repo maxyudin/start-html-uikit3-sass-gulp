@@ -1,18 +1,13 @@
-import {css, Dimensions, endsWith, fragment, getImage, height, isInView, isNumeric, noop, queryAll, startsWith, toFloat, width} from 'uikit-util';
+import {createEvent, css, Dimensions, endsWith, getImage, height, includes, isInView, isNumeric, noop, queryAll, startsWith, toFloat, trigger, width} from 'uikit-util';
 
 export default {
-
-    attrs: true,
 
     props: {
         dataSrc: String,
         dataSrcset: Boolean,
-        dataSizes: Boolean,
         sizes: String,
         width: Number,
         height: Number,
-        dataWidth: Number,
-        dataHeight: Number,
         offsetTop: String,
         offsetLeft: String,
         target: String
@@ -21,7 +16,6 @@ export default {
     data: {
         dataSrc: '',
         dataSrcset: false,
-        dataSizes: false,
         sizes: false,
         width: false,
         height: false,
@@ -68,9 +62,9 @@ export default {
 
     connected() {
 
-        if (storage[this.cacheKey] || this.isImg && (!this.width || !this.height)) {
+        if (storage[this.cacheKey]) {
             setSrcAttrs(this.$el, storage[this.cacheKey] || this.dataSrc, this.dataSrcset, this.sizes);
-        } else if (this.isImg) {
+        } else if (this.isImg && this.width && this.height) {
             setSrcAttrs(this.$el, getPlaceholderImage(this.width, this.height, this.sizes));
         }
 
@@ -131,15 +125,20 @@ function setSrcAttrs(el, src, srcset, sizes) {
         src && (el.src = src);
         srcset && (el.srcset = srcset);
         sizes && (el.sizes = sizes);
-    } else {
-        src && css(el, 'backgroundImage', `url(${src})`);
+    } else if (src) {
+
+        const change = !includes(el.style.backgroundImage, src);
+        css(el, 'backgroundImage', `url(${src})`);
+        if (change) {
+            trigger(el, createEvent('load', false));
+        }
+
     }
 
 }
 
-const urlCache = {};
 const sizesRe = /\s*(.*?)\s*(\w+|calc\(.*?\))\s*(?:,|$)/g;
-function getPlaceholderImage(width, height, sizes, color = 'transparent') {
+function getPlaceholderImage(width, height, sizes) {
 
     if (sizes) {
         let matches;
@@ -157,20 +156,7 @@ function getPlaceholderImage(width, height, sizes, color = 'transparent') {
 
     }
 
-    const key = `${width}.${height}.${color}`;
-    if (urlCache[key]) {
-        return urlCache[key];
-    }
-
-    const canvas = fragment('<canvas>');
-    canvas.width = width;
-    canvas.height = height;
-
-    const context = canvas.getContext('2d');
-    context.fillStyle = color;
-    context.fillRect(0, 0, width, height);
-
-    return urlCache[key] = canvas.toDataURL('image/png');
+    return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"></svg>`;
 }
 
 const sizeRe = /\d+(?:\w+|%)/g;
@@ -212,11 +198,11 @@ function currentSrc(el) {
 }
 
 const key = '__test__';
+let storage;
 
-let storage = window.sessionStorage || {};
-
-// workaround for Safari's private browsing mode
+// workaround for Safari's private browsing mode and accessing sessionStorage in Blink
 try {
+    storage = window.sessionStorage || {};
     storage[key] = 1;
     delete storage[key];
 } catch (e) {

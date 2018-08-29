@@ -1,6 +1,6 @@
 import Animate from '../mixin/animate';
 import Class from '../mixin/class';
-import {addClass, after, assign, append, attr, before, closest, css, height, getPos, includes, index, isInput, offset, off, on, pointerDown, pointerMove, pointerUp, preventClick, remove, removeClass, toggleClass, toNodes, trigger, within} from 'uikit-util';
+import {$$, addClass, after, assign, append, attr, before, closest, css, height, getPos, includes, index, isInput, offset, off, on, pointerDown, pointerMove, pointerUp, preventClick, remove, removeClass, scrollTop, toggleClass, toNodes, trigger, within} from 'uikit-util';
 
 export default {
 
@@ -61,6 +61,8 @@ export default {
                 toggleClass(this.$el, this.clsEmpty, !this.$el.children.length);
             }
 
+            css(this.handle ? $$(this.handle, this.$el) : this.$el.children, 'touchAction', 'none');
+
             if (!this.drag) {
                 return;
             }
@@ -77,7 +79,7 @@ export default {
                 scroll = this.scrollY + 5;
             }
 
-            scroll && setTimeout(() => window.scroll(window.pageXOffset, scroll), 5);
+            scroll && setTimeout(() => scrollTop(window, scroll), 5);
         }
 
     },

@@ -5,8 +5,6 @@ import {$, assign, clamp, fastdom, getIndex, hasClass, isNumber, isRtl, Promise,
 
 export default {
 
-    attrs: true,
-
     mixins: [SliderAutoplay, SliderDrag, SliderNav],
 
     props: {
@@ -61,7 +59,7 @@ export default {
     events: {
 
         itemshown() {
-            this.$update(this.$el);
+            this.$update(this.list);
         }
 
     },

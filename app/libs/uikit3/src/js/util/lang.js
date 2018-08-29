@@ -5,7 +5,8 @@ export function bind(fn, context) {
     };
 }
 
-const {hasOwnProperty} = Object.prototype;
+const objPrototype = Object.prototype;
+const {hasOwnProperty} = objPrototype;
 
 export function hasOwn(obj, key) {
     return hasOwnProperty.call(obj, key);
@@ -71,7 +72,7 @@ export function isObject(obj) {
 }
 
 export function isPlainObject(obj) {
-    return isObject(obj) && Object.getPrototypeOf(obj) === Object.prototype;
+    return isObject(obj) && Object.getPrototypeOf(obj) === objPrototype;
 }
 
 export function isWindow(obj) {
@@ -86,12 +87,13 @@ export function isJQuery(obj) {
     return isObject(obj) && !!obj.jquery;
 }
 
-export function isNode(element) {
-    return element instanceof Node || isObject(element) && element.nodeType === 1;
+export function isNode(obj) {
+    return obj instanceof Node || isObject(obj) && obj.nodeType === 1;
 }
 
-export function isNodeCollection(element) {
-    return element instanceof NodeList || element instanceof HTMLCollection;
+const {toString} = objPrototype;
+export function isNodeCollection(obj) {
+    return toString.call(obj).match(/^\[object (NodeList|HTMLCollection)\]$/);
 }
 
 export function isBoolean(value) {
@@ -197,9 +199,7 @@ export const assign = Object.assign || function (target, ...args) {
 
 export function each(obj, cb) {
     for (const key in obj) {
-        if (cb.call(obj[key], obj[key], key) === false) {
-            break;
-        }
+        cb.call(obj[key], obj[key], key);
     }
 }
 
@@ -208,8 +208,8 @@ export function sortBy(collection, prop) {
         a[prop] > b[prop]
             ? 1
             : b[prop] > a[prop]
-            ? -1
-            : 0
+                ? -1
+                : 0
     );
 }
 
@@ -220,14 +220,17 @@ export function clamp(number, min = 0, max = 1) {
 export function noop() {}
 
 export function intersectRect(r1, r2) {
-    return r1.left <= r2.right &&
-        r2.left <= r1.right &&
-        r1.top <= r2.bottom &&
-        r2.top <= r1.bottom;
+    return r1.left < r2.right &&
+        r1.right > r2.left &&
+        r1.top < r2.bottom &&
+        r1.bottom > r2.top;
 }
 
 export function pointInRect(point, rect) {
-    return intersectRect({top: point.y, bottom: point.y, left: point.x, right: point.x}, rect);
+    return point.x <= rect.right &&
+        point.x >= rect.left &&
+        point.y <= rect.bottom &&
+        point.y >= rect.top;
 }
 
 export const Dimensions = {
@@ -237,7 +240,7 @@ export const Dimensions = {
         const aProp = prop === 'width' ? 'height' : 'width';
 
         return {
-            [aProp]: Math.round(value * dimensions[aProp] / dimensions[prop]),
+            [aProp]: dimensions[prop] ? Math.round(value * dimensions[aProp] / dimensions[prop]) : dimensions[aProp],
             [prop]: value
         };
     },

@@ -3,14 +3,11 @@ import {$$, assign, data, index} from 'uikit-util';
 
 export default {
 
-    attrs: true,
+    install,
 
-    props: assign({toggle: String}, LightboxPanel.props),
+    props: {toggle: String},
 
-    data: assign({toggle: 'a'}, Object.keys(LightboxPanel.props).reduce((data, key) => {
-        data[key] = LightboxPanel.data[key];
-        return data;
-    }, {})),
+    data: {toggle: 'a'},
 
     computed: {
 
@@ -46,12 +43,7 @@ export default {
 
     update(data) {
 
-        data.toggles = data.toggles || this.toggles;
-
-        if (this.panel && this.animation) {
-            this.panel.$props.animation = this.animation;
-            this.panel.$emit();
-        }
+        data.toggles = this.panel && data.toggles || this.toggles;
 
         if (!this.panel || isEqualList(data.toggles, this.toggles)) {
             return;
@@ -107,4 +99,17 @@ export default {
 function isEqualList(listA, listB) {
     return listA.length === listB.length
         && listA.every((el, i) => el === listB[i]);
+}
+
+function install(UIkit, Lightbox) {
+
+    if (!UIkit.lightboxPanel) {
+        UIkit.component('lightboxPanel', LightboxPanel);
+    }
+
+    assign(
+        Lightbox.props,
+        UIkit.component('lightboxPanel').options.props
+    );
+
 }

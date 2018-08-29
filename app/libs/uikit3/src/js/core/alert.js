@@ -4,8 +4,6 @@ import {assign} from 'uikit-util';
 
 export default {
 
-    attrs: true,
-
     mixins: [Class, Togglable],
 
     args: 'animation',
