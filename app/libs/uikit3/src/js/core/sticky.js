@@ -1,9 +1,10 @@
 import Class from '../mixin/class';
-import {$, addClass, after, Animation, assign, attr, css, fastdom, hasClass, height, isNumeric, isString, isVisible, noop, offset, query, remove, removeClass, replaceClass, scrollTop, toFloat, toggleClass, trigger, within} from 'uikit-util';
+import Media from '../mixin/media';
+import {$, addClass, after, Animation, assign, attr, css, fastdom, hasClass, height, isNumeric, isString, isUndefined, isVisible, noop, offset, offsetPosition, query, remove, removeClass, replaceClass, scrollTop, toFloat, toggleClass, trigger, within} from 'uikit-util';
 
 export default {
 
-    mixins: [Class],
+    mixins: [Class, Media],
 
     props: {
         top: null,
@@ -17,7 +18,6 @@ export default {
         selTarget: String,
         widthElement: Boolean,
         showOnUp: Boolean,
-        media: 'media',
         targetOffset: Number
     },
 
@@ -33,7 +33,6 @@ export default {
         selTarget: '',
         widthElement: false,
         showOnUp: false,
-        media: false,
         targetOffset: false
     },
 
@@ -50,18 +49,13 @@ export default {
     },
 
     connected() {
-
         this.placeholder = $('+ .uk-sticky-placeholder', this.$el) || $('<div class="uk-sticky-placeholder"></div>');
-
-        if (!this.isActive) {
-            this.hide();
-        }
     },
 
     disconnected() {
 
         if (this.isActive) {
-            this.isActive = false;
+            this.isActive = undefined;
             this.hide();
             removeClass(this.selTarget, this.clsInactive);
         }
@@ -133,35 +127,39 @@ export default {
 
         {
 
-            read() {
-                return {
-                    height: this.$el.offsetHeight,
-                    top: offset(this.isActive ? this.placeholder : this.$el).top
-                };
-            },
+            read({height}, {type}) {
 
-            write({height, top}) {
+                height = !this.isActive || type === 'resize' ? this.$el.offsetHeight : height;
 
-                const {placeholder} = this;
-
-                css(placeholder, assign(
-                    {height: css(this.$el, 'position') !== 'absolute' ? height : ''},
-                    css(this.$el, ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'])
-                ));
-
-                if (!within(placeholder, document)) {
-                    after(this.$el, placeholder);
-                    attr(placeholder, 'hidden', '');
-                }
-
-                this.topOffset = top;
+                this.topOffset = offset(this.isActive ? this.placeholder : this.$el).top;
                 this.bottomOffset = this.topOffset + height;
 
                 const bottom = parseProp('bottom', this);
 
                 this.top = Math.max(toFloat(parseProp('top', this)), this.topOffset) - this.offset;
                 this.bottom = bottom && bottom - height;
-                this.inactive = this.media && !window.matchMedia(this.media).matches;
+                this.inactive = !this.matchMedia;
+
+                return {
+                    height,
+                    margins: css(this.$el, ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'])
+                };
+            },
+
+            write({height, margins}) {
+
+                const {placeholder} = this;
+
+                css(placeholder, assign({height}, margins));
+
+                if (!within(placeholder, document)) {
+                    after(this.$el, placeholder);
+                    attr(placeholder, 'hidden', '');
+                }
+
+                if (isUndefined(this.isActive)) {
+                    this.hide();
+                }
 
             },
 
@@ -177,13 +175,30 @@ export default {
 
                 return {
                     scroll: this.scroll = scrollY,
-                    visible: isVisible(this.$el)
+                    visible: isVisible(this.$el),
+                    top: offsetPosition(this.placeholder)[0]
                 };
             },
 
-            write({visible, scroll}, {dir} = {}) {
+            write(data, {dir} = {}) {
 
-                if (scroll < 0 || !visible || this.disabled || this.showOnUp && !dir) {
+                const {initTimestamp = 0, lastDir, lastScroll, scroll, top, visible} = data;
+                const now = performance.now();
+
+                data.lastScroll = scroll;
+
+                if (scroll < 0 || scroll === lastScroll || !visible || this.disabled || this.showOnUp && !dir) {
+                    return;
+                }
+
+                if (now - initTimestamp > 300 || dir !== lastDir) {
+                    data.initScroll = scroll;
+                    data.initTimestamp = now;
+                }
+
+                data.lastDir = dir;
+
+                if (this.showOnUp && Math.abs(data.initScroll - scroll) <= 30 && Math.abs(lastScroll - scroll) <= 10) {
                     return;
                 }
 
@@ -193,6 +208,12 @@ export default {
                 ) {
 
                     if (!this.isActive) {
+
+                        if (Animation.inProgress(this.$el) && top > scroll) {
+                            Animation.cancel(this.$el);
+                            this.hide();
+                        }
+
                         return;
                     }
 

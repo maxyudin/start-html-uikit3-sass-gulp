@@ -2,12 +2,16 @@ import {getPos, includes, isRtl, isTouch, off, on, pointerDown, pointerMove, poi
 
 export default {
 
-    data: {
-        threshold: 10,
-        preventCatch: false
+    props: {
+        draggable: Boolean
     },
 
-    init() {
+    data: {
+        draggable: true,
+        threshold: 10
+    },
+
+    created() {
 
         ['start', 'move', 'end'].forEach(key => {
 
@@ -38,10 +42,10 @@ export default {
 
             handler(e) {
 
-                if (!isTouch(e) && hasTextNodesOnly(e.target)
+                if (!this.draggable
+                    || !isTouch(e) && hasTextNodesOnly(e.target)
                     || e.button > 0
                     || this.length < 2
-                    || this.preventCatch
                 ) {
                     return;
                 }

@@ -70,66 +70,62 @@ export default {
 
     },
 
-    update: [
+    update: {
 
-        {
+        read({update, image}) {
 
-            read({delay, image}) {
+            if (!update) {
+                return;
+            }
 
-                if (!delay) {
-                    return;
+            if (image || !this.target.some(el => isInView(el, this.offsetTop, this.offsetLeft, true))) {
+
+                if (!this.isImg && image) {
+                    image.then(img => img && setSrcAttrs(this.$el, currentSrc(img)));
                 }
 
-                if (image || !this.target.some(el => isInView(el, this.offsetTop, this.offsetLeft, true))) {
+                return;
+            }
 
-                    if (!this.isImg && image) {
-                        image.then(img => img && setSrcAttrs(this.$el, currentSrc(img)));
-                    }
+            return {
+                image: getImage(this.dataSrc, this.dataSrcset, this.sizes).then(img => {
 
-                    return;
-                }
+                    setSrcAttrs(this.$el, currentSrc(img), img.srcset, img.sizes);
+                    storage[this.cacheKey] = currentSrc(img);
+                    return img;
 
-                return {
-                    image: getImage(this.dataSrc, this.dataSrcset, this.sizes).then(img => {
+                }, noop)
+            };
 
-                        setSrcAttrs(this.$el, currentSrc(img), img.srcset, img.sizes);
-                        storage[this.cacheKey] = currentSrc(img);
-                        return img;
+        },
 
-                    }, noop)
-                };
+        write(data) {
 
-            },
+            // Give placeholder images time to apply their dimensions
+            if (!data.update) {
+                this.$emit();
+                return data.update = true;
+            }
 
-            write(data) {
+        },
 
-                // Give placeholder images time to apply their dimensions
-                if (!data.delay) {
-                    this.$emit();
-                    return data.delay = true;
-                }
+        events: ['scroll', 'load', 'resize']
 
-            },
-
-            events: ['scroll', 'load', 'resize']
-
-        }
-
-    ]
+    }
 
 };
 
 function setSrcAttrs(el, src, srcset, sizes) {
 
     if (isImg(el)) {
-        src && (el.src = src);
-        srcset && (el.srcset = srcset);
         sizes && (el.sizes = sizes);
+        srcset && (el.srcset = srcset);
+        src && (el.src = src);
     } else if (src) {
 
         const change = !includes(el.style.backgroundImage, src);
-        css(el, 'backgroundImage', `url(${src})`);
         if (change) {
+            css(el, 'backgroundImage', `url(${src})`);
             trigger(el, createEvent('load', false));
         }
 

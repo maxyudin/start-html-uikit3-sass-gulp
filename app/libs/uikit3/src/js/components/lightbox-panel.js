@@ -85,7 +85,11 @@ export default {
 
             self: true,
 
-            handler: 'showControls'
+            handler() {
+                this.startAutoplay();
+                this.showControls();
+            }
+
         },
 
         {
@@ -96,6 +100,7 @@ export default {
 
             handler() {
 
+                this.stopAutoplay();
                 this.hideControls();
 
                 removeClass(this.slides, this.clsActive);
@@ -137,7 +142,7 @@ export default {
                     return;
                 }
 
-                this.preventCatch = true;
+                this.draggable = false;
 
                 e.preventDefault();
 
@@ -177,7 +182,7 @@ export default {
             name: 'itemshown',
 
             handler() {
-                this.preventCatch = false;
+                this.draggable = this.$props.draggable;
             }
 
         },

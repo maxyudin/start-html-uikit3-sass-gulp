@@ -88,7 +88,7 @@ export function isJQuery(obj) {
 }
 
 export function isNode(obj) {
-    return obj instanceof Node || isObject(obj) && obj.nodeType === 1;
+    return obj instanceof Node || isObject(obj) && obj.nodeType >= 1;
 }
 
 const {toString} = objPrototype;
@@ -204,17 +204,17 @@ export function each(obj, cb) {
 }
 
 export function sortBy(collection, prop) {
-    return collection.sort((a, b) =>
-        a[prop] > b[prop]
+    return collection.sort(({[prop]: propA = 0}, {[prop]: propB = 0}) =>
+        propA > propB
             ? 1
-            : b[prop] > a[prop]
+            : propB > propA
                 ? -1
                 : 0
     );
 }
 
 export function clamp(number, min = 0, max = 1) {
-    return Math.min(Math.max(number, min), max);
+    return Math.min(Math.max(toNumber(number) || 0, min), max);
 }
 
 export function noop() {}
