@@ -63,19 +63,11 @@ gulp.task('sass', function() {
 	.pipe(browserSync.stream())
 });
 
-
-
-
-
-
-
 gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
 	gulp.watch('app/sass/**/*.sass', ['sass']);
 	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
 	gulp.watch('app/*.html', browserSync.reload);
 });
-
-
 
 gulp.task('imagemin', function() {
 	return gulp.src('app/img/**/*')
