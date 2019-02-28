@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 
-Template for quick start of your web projects `v1.1`
+Template for quick start of your web projects `v2.0`
 
 Built on:
   - framework `UIKit3`
@@ -30,6 +30,11 @@ Used Gulp Packages:
   - gulp-notify
   - vinyl-ftp
   - gulp-rsync
+-----------
+Install `Gulp` and other modules with one command according to the instructions in the `package.json`:
+```
+$ npm i
+
 -----------
 Installing the required `Gulp` packages:
 ```
