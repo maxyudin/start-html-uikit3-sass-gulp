@@ -24,8 +24,6 @@ let styles = () => {
 	  .pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
     //.pipe(rename({suffix: '.min', prefix : ''}))
     .pipe(concat('style.min.css'))
-    .pipe(autoprefixer(['last 15 versions']))
-    .pipe(cleanCSS()) // Опционально, закомментировать при отладке
     .pipe(gulp.dest('./app/css'))
     .pipe(browserSync.stream())
 };
@@ -67,6 +65,8 @@ let buildHtml = () => {
 
 let buildCss = () => {
 	return gulp.src('./app/css/style.min.css')
+	.pipe(autoprefixer(['last 15 versions']))
+  .pipe(cleanCSS()) // Опционально, закомментировать при отладке
 	.pipe(gulp.dest('./dist/css'))
 };
 
