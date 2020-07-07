@@ -1,30 +1,42 @@
 {
-  "name": "start-html-uikit3-sass-gulp",
-  "version": "2.0.0",
+  "name": "maxyudin-wp-uikit3-sass",
+  "version": "1.0.0",
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sergey Pinchukov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxyudin/start-html-uikit3-sass-gulp.git"
+  },
+  "keywords": [
+    "wordpress",
+    "uikit3",
+    "sass"
+  ],
+  "author": "Max Yudin",
   "license": "ISC",
-  "devDependencies": {
-    "browser-sync": "^2.26.3",
-    "del": "^3.0.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^5.0.0",
-    "gulp-cache": "^1.1.1",
-    "gulp-clean-css": "^3.10.0",
+  "bugs": {
+    "url": "https://github.com/maxyudin/start-html-uikit3-sass-gulp/issues"
+  },
+  "homepage": "https://github.com/maxyudin/start-html-uikit3-sass-gulp#readme",
+  "dependencies": {
+    "browser-sync": "^2.26.7",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-cache": "^1.1.3",
+    "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
-    "gulp-htmlmin": "^4.0.0",
-    "gulp-imagemin": "^4.1.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-imagemin": "^7.1.0",
     "gulp-notify": "^3.2.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-rsync": "0.0.8",
-    "gulp-sass": "^4.0.2",
-    "gulp-uglify": "^3.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-rsync": "0.0.9",
+    "gulp-sass": "^4.1.0",
+    "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",
-    "imagemin-pngquant": "^5.1.0",
     "vinyl-ftp": "^0.6.1"
   }
 }

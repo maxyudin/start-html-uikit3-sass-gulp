@@ -1,31 +1,29 @@
-let syntax        = 'sass', // Syntax: sass or scss;
-		gulpversion   = '4'; // Верcия Gulp;
+let syntax    = 'sсss'; // Syntax: sass or scss;
 
-let gulp           = require('gulp'),
-		gutil          = require('gulp-util' ), //Вывод уведомления в консоль, так как в gulp нет встроенного лога
-		sass           = require('gulp-sass'), //Подключаем Sass пакет
-		browserSync    = require('browser-sync'), // Подключаем автообновление через Browser Sync
-		concat         = require('gulp-concat'), // Подключаем gulp-concat (для конкатенации файлов)
-		uglify         = require('gulp-uglify'), // Подключаем gulp-uglifyjs (для сжатия JS)
-		cleanCSS       = require('gulp-clean-css'), // Минификация CSS
-		htmlmin        = require('gulp-htmlmin'), //Минификация HTML
-		rename         = require('gulp-rename'), // Подключаем библиотеку для переименования файлов
-		del            = require('del'), // Подключаем библиотеку для удаления файлов и папок /////
-		imagemin       = require('gulp-imagemin'), // Подключаем библиотеку для работы с изображениями
-		cache          = require('gulp-cache'), // Подключаем библиотеку кеширования ///
-		autoprefixer   = require('gulp-autoprefixer'), // Подключаем библиотеку для автоматического добавления префиксов
-		notify         = require("gulp-notify"), // Водит ошибки при сборке Gulp в виде системных сообщений
-		ftp            = require('vinyl-ftp'), // Диплой на хостинг через FTP
-		rsync          = require('gulp-rsync'); // Диплой на хостинг через SSH
+let gulp         = require('gulp'),
+	gutil        = require('gulp-util' ), //вывод уведомлений в консоль
+	sass         = require('gulp-sass'),
+	browserSync  = require('browser-sync'),
+	concat       = require('gulp-concat'), // конкатенация файлов
+	uglify       = require('gulp-uglify'), // сжатие JS
+	cleanCSS     = require('gulp-clean-css'), // Минификация CSS
+	htmlmin      = require('gulp-htmlmin'), // Минификация HTML
+	rename       = require('gulp-rename'), // переименование файлов
+	del          = require('del'), // удаление файлов и каталогов
+	imagemin     = require('gulp-imagemin'), // работа с изображениями
+	cache        = require('gulp-cache'),
+	autoprefixer = require('gulp-autoprefixer'), // автоматическое добавление префиксов
+	notify       = require("gulp-notify"), // Вывод системных сообщений
+	ftp          = require('vinyl-ftp'), // Диплой на хостинг через FTP
+	rsync        = require('gulp-rsync'); // синхронизация файлов и каталогов
 
-// ==================== Создаём и описываем функции в новом формате
 let styles = () => {
 	return gulp.src('./app/sass/**/*.sass')
-	  .pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
-    //.pipe(rename({suffix: '.min', prefix : ''}))
-    .pipe(concat('style.min.css'))
-    .pipe(gulp.dest('./app/css'))
-    .pipe(browserSync.stream())
+		.pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
+		//.pipe(rename({suffix: '.min', prefix : ''}))
+		.pipe(concat('style.min.css'))
+		.pipe(gulp.dest('./app/css'))
+		.pipe(browserSync.stream())
 };
 
 let scripts = () => {
@@ -34,7 +32,7 @@ let scripts = () => {
 		'app/libs/uikit3/dist/js/uikit.min.js',
 		'app/libs/uikit3/dist/js/uikit-icons.min.js',
 		'app/js/common.js',
-		])
+	])
 	.pipe(concat('scripts.min.js'))
 	.pipe(gulp.dest('./app/js'))
 	.pipe(browserSync.reload({ stream: true }))
@@ -56,7 +54,7 @@ let imgmin = () => {
 };
 
 
-// ==================== Отдельно подготавливаем файлы для build на продакшн
+// ==================== файлы для продакшна
 let buildHtml = () => {
 	return gulp.src('./app/*.html')
 	.pipe(htmlmin({collapseWhitespace: true}))//Сжимаем их как следует
@@ -66,17 +64,17 @@ let buildHtml = () => {
 let buildCss = () => {
 	return gulp.src('./app/css/style.min.css')
 	.pipe(autoprefixer(['last 15 versions']))
-  .pipe(cleanCSS()) // Опционально, закомментировать при отладке
+	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
 	.pipe(gulp.dest('./dist/css'))
 };
 
 let buildFiles = () => {
 	return gulp.src([
-	  //'./app/*.php',
-	  //'./app/*.xml',
-	  './app/*.txt',
-	  './app/.htaccess',
-	  ]).pipe(gulp.dest('./dist'))
+		//'./app/*.php',
+		//'./app/*.xml',
+		'./app/*.txt',
+		'./app/.htaccess',
+	]).pipe(gulp.dest('./dist'))
 };
 
 let buildJs = () => {
@@ -86,7 +84,7 @@ let buildJs = () => {
 };
 // ==================== END
 
-// ==================== Отслеживаем любые изменения в файлах
+// ==================== Отслеживание изменений в файлах
 let watch = () => {
 	browserSync.init({
 		server: {
@@ -102,7 +100,7 @@ let watch = () => {
   gulp.watch('./app/*.html', html);
 };
 
-// ==================== Объявляем и описываем таски
+// ==================== объявление задач
 gulp.task('styles', styles);
 gulp.task('scripts', scripts);
 gulp.task('clean', clean);
@@ -112,21 +110,15 @@ gulp.task('buildCss', buildCss);
 gulp.task('buildFiles', buildFiles);
 gulp.task('buildJs', buildJs);
 
-if (gulpversion == 4) {
-// ==================== Собираем проект на продакшн в папку dist
-gulp.task('build', gulp.series(clean, 
-	                 gulp.parallel(buildHtml, buildCss, buildJs, buildFiles, imgmin))
+// ==================== сборка проекта в папку dist
+gulp.task('build', gulp.series(clean,
+	gulp.parallel(buildHtml, buildCss, buildJs, buildFiles, imgmin))
 );
 
 gulp.task('default', gulp.series(watch, browserSync));
 gulp.task('watch', gulp.series(watch, browserSync));
 
-};
 
-
-if (gulpversion == 3) {
-// Таски и функции для Gulp v3
-};
 
 
 gulp.task('deploy', () => {
